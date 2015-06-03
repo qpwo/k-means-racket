@@ -16,7 +16,7 @@
       (let-values ([(soon later) (split-at ls size)])
         (cons soon (R later (sub1 k)))))))
 
-;; partitions a list into sublists that all have the same output under f
+;; partitions a list into sublists with equal elements under f
 (define (multi-partition f ls)
   (hash-values
     (for/fold ([a-hash (make-immutable-hasheqv)])
@@ -47,7 +47,7 @@
 ;; core algorithm
 
 ;; returns the value x such that (f x) = x
-(define (fixed-point f start [same? =])
+(define (fixed-point f start [same? equal?])
   (let R ([x start])
     (let ([f@x (f x)])
       (if (same? x f@x)
@@ -56,7 +56,7 @@
 
 ;; given a list of points and centers,
 ;; assign each point to the nearest center,
-;; then return the mean of each of these "clusters"
+;; then returns the mean of each of these "clusters"
 (define (make-next-centers points centers)
   (map mean (multi-partition (curry closest centers) points)))
 
@@ -64,5 +64,7 @@
 (define (cluster S k)
   (define first-centers (map mean (split-into S k)))
   (fixed-point (λ (centers) (make-next-centers S centers))
-               first-centers
-               equal?))
+               first-centers))
+
+(provide cluster)
+;TODO: contract above
