@@ -21,7 +21,9 @@
 
 ;; squared euclidean distance
 (define (distance p1 p2)
-  (for/sum ([x1 p1] [x2 p2]) (expt (- x2 x1) 2)))
+  (for/sum ([x1 (in-list p1)]
+            [x2 (in-list p2)])
+    (expt (- x2 x1) 2)))
 
 ;; the closest center to point in centers
 (define (closest centers point)
